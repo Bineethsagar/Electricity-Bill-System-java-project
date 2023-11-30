@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.electricity.billing.system.dto.CustomerRequestDto;
 import com.electricity.billing.system.dto.ErrorResponseDto;
 import com.electricity.billing.system.dto.LoginRequestDto;
+import com.electricity.billing.system.entity.CustomerModel;
 import com.electricity.billing.system.service.CustomerService;
+import com.electricity.billing.system.util.Constants;
 
 @RestController
 public class Customer_Controller {
@@ -21,10 +23,18 @@ public class Customer_Controller {
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> saveCustomerDetails(@RequestBody CustomerRequestDto request){
-		
-		return service.saveCustomerDetails(request);		
-	}
-	@GetMapping("Login")
+		CustomerModel model = new CustomerModel();
+		ErrorResponseDto response = new ErrorResponseDto();
+
+			if(request.getPassword().equals( request.getConfirmPassword())) {
+				return service.saveCustomerDetails(request);		
+			}else {
+				response.setError_code(Constants.EBS105);
+				response.setError_message(Constants.PASSWORD_AND_CONFIRMPASSWORD_NOT_MATCHED);
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);		
+			}
+}
+	@GetMapping("/login")
 	public ResponseEntity<?> loginRequest(@RequestBody LoginRequestDto request) {
 		
 		return service.loginRequest(request);
