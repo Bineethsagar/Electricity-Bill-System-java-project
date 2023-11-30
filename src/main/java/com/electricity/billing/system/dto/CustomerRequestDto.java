@@ -1,5 +1,6 @@
 package com.electricity.billing.system.dto;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.ToString;
 
@@ -7,7 +8,7 @@ import lombok.ToString;
 @ToString
 public class CustomerRequestDto {
 
-	private String customerName;
+	private String userName;
 	
 	private String meterNumber;
 	
@@ -17,7 +18,11 @@ public class CustomerRequestDto {
 	
 	private String state;
 	
-	private String Email;
+	private String email;
+	
+	private String password;
+	
+	private String confirmPassword;
 	
 	private String phoneNumber;
 

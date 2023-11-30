@@ -25,7 +25,7 @@ public class CustomerModel {
 	private int customerId;
 	
 	@Column(name = "customer_name")
-	private String customerName;
+	private String userName;
 	
 	@Column(name = "meter_number")
 	private String meterNumber;
@@ -40,7 +40,13 @@ public class CustomerModel {
 	private String state;
 	
 	@Column(name = "Email")
-	private String Email;
+	private String email;
+	
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "confirm_password")
+	private String confirmPassword;
 	
 	@Column(name = "phone_number")
 	private String phoneNumber;
