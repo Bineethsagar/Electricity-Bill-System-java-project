@@ -52,6 +52,7 @@ public class CustomerServiceImpl implements CustomerService{
 		ErrorResponseDto response = new ErrorResponseDto();
 		CustomerModel customerDetails = null;
 		
+	try {
 		customerDetails = repository.findByEmailAndPassword(request.getEmail(), request.getPassword());
 		if(customerDetails == null) {
 			response.setError_code(Constants.EBS102);
@@ -61,8 +62,10 @@ public class CustomerServiceImpl implements CustomerService{
 			response.setError_code(Constants.EBS103);
 			response.setError_message(Constants.LOGIN_SUCCESS);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
-			
 		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response + e.getMessage());
+}
 }
 
 	@Override
@@ -70,20 +73,22 @@ public class CustomerServiceImpl implements CustomerService{
 
 		ErrorResponseDto response = new ErrorResponseDto();
 		
-		CustomerModel model = repository.findByMeterNumber(meterNumber);
+		try {
+			CustomerModel model = repository.findByMeterNumber(meterNumber);
 
-		if(model!=null) {
-			response.setError_code(Constants.EBS106);
-			response.setError_message(Constants.USER_DETAILS_EXISTS);
-			return ResponseEntity.ok(repository.findByMeterNumber(meterNumber));
-			
-		}else {
-			response.setError_code(Constants.EBS107);
-			response.setError_message(Constants.USER_DETAILS_NOT_FOUND);
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
-
+			if(model!=null) {
+				response.setError_code(Constants.EBS106);
+				response.setError_message(Constants.USER_DETAILS_EXISTS);
+				return ResponseEntity.ok(repository.findByMeterNumber(meterNumber));
+				
+			}else {
+				response.setError_code(Constants.EBS107);
+				response.setError_message(Constants.USER_DETAILS_NOT_FOUND);
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
+			}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response + e.getMessage());
 		}
-	}
-	
+	}	
 }
 
