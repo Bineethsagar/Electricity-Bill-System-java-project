@@ -9,5 +9,7 @@ import com.electricity.billing.system.entity.CustomerModel;
 public interface CustomerRepository extends JpaRepository<CustomerModel, Integer> {
 	
 	public CustomerModel findByEmailAndPassword(String email, String password);
+	
+	public CustomerModel findByMeterNumber(String meterNumber);
 
 }

@@ -8,5 +8,8 @@ import com.electricity.billing.system.dto.LoginRequestDto;
 public interface CustomerService {
 
 	ResponseEntity<?> saveCustomerDetails(CustomerRequestDto request);
+	
 	ResponseEntity<?> loginRequest(LoginRequestDto request);
+	
+	ResponseEntity<?> findCustomerByMeterDetails(String meterNumber);
 }

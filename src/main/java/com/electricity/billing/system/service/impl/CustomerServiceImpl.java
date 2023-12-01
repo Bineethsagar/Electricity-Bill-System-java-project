@@ -64,5 +64,26 @@ public class CustomerServiceImpl implements CustomerService{
 			
 		}
 }
+
+	@Override
+	public ResponseEntity<?> findCustomerByMeterDetails(String meterNumber) {
+
+		ErrorResponseDto response = new ErrorResponseDto();
+		
+		CustomerModel model = repository.findByMeterNumber(meterNumber);
+
+		if(model!=null) {
+			response.setError_code(Constants.EBS106);
+			response.setError_message(Constants.USER_DETAILS_EXISTS);
+			return ResponseEntity.ok(repository.findByMeterNumber(meterNumber));
+			
+		}else {
+			response.setError_code(Constants.EBS107);
+			response.setError_message(Constants.USER_DETAILS_NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
+
+		}
+	}
+	
 }
 

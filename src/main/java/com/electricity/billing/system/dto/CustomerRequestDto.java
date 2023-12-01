@@ -1,6 +1,5 @@
 package com.electricity.billing.system.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.ToString;
 
