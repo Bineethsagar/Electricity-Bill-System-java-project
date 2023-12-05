@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import lombok.extern.log4j.Log4j2;
 import com.electricity.billing.system.dto.CustomerRequestDto;
 import com.electricity.billing.system.dto.ErrorResponseDto;
-import com.electricity.billing.system.dto.LoginRequestDto;
 import com.electricity.billing.system.entity.CustomerModel;
 import com.electricity.billing.system.repository.CustomerRepository;
 import com.electricity.billing.system.service.CustomerService;
 import com.electricity.billing.system.util.Constants;
 
+@Log4j2
 @Service
 public class CustomerServiceImpl implements CustomerService{
 	
@@ -20,8 +20,8 @@ public class CustomerServiceImpl implements CustomerService{
 	CustomerRepository repository;
 
 	@Override
-	public ResponseEntity<?> saveCustomerDetails(CustomerRequestDto request) {
-
+	public ResponseEntity<?> customerRegister(CustomerRequestDto request) {
+		log.info("In CustomerServiceImpl customerRegister() with request :" + request);
 		ErrorResponseDto response = new ErrorResponseDto();
 		CustomerModel model = new CustomerModel();
 		try 
@@ -41,36 +41,17 @@ public class CustomerServiceImpl implements CustomerService{
 			response.setError_message(Constants.SUCCESS);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		}catch(Exception ex){
+			log.error("Error occurred In CustomerServiceImpl customerRegister(): " + ex.getMessage());
 			response.setError_code(Constants.EBS100);
 			response.setError_message(Constants.FAILED);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);	
 		}
 	}
 
-	@Override
-	public ResponseEntity<?> loginRequest(LoginRequestDto request) {
-		ErrorResponseDto response = new ErrorResponseDto();
-		CustomerModel customerDetails = null;
-		
-	try {
-		customerDetails = repository.findByEmailAndPassword(request.getEmail(), request.getPassword());
-		if(customerDetails == null) {
-			response.setError_code(Constants.EBS102);
-			response.setError_message(Constants.EMAIL_NOT_FOUND);
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
-		}else {
-			response.setError_code(Constants.EBS103);
-			response.setError_message(Constants.LOGIN_SUCCESS);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
-		}
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response + e.getMessage());
-}
-}
-
+	
 	@Override
 	public ResponseEntity<?> findCustomerByMeterDetails(String meterNumber) {
-
+		log.info("In CustomerServiceImpl findCustomerByMeterDetails() with request :" + meterNumber);
 		ErrorResponseDto response = new ErrorResponseDto();
 		
 		try {
@@ -84,9 +65,10 @@ public class CustomerServiceImpl implements CustomerService{
 			}else {
 				response.setError_code(Constants.EBS107);
 				response.setError_message(Constants.USER_DETAILS_NOT_FOUND);
-				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 			}
 		}catch(Exception e) {
+			log.error("Error occurred In CustomerServiceImpl findCustomerByMeterDetails(): " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response + e.getMessage());
 		}
 	}	
